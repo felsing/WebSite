@@ -27,16 +27,16 @@ jobs:
           docker build -t download-images-web .
           docker images  # 检查镜像是否成功构建
 
-      # 导出 Docker 镜像为 TAR 文件
+      # 保存 Docker 镜像为传统 tar 文件
       - name: Save Docker image as TAR
         run: |
           mkdir -p output
-          docker save download-images-web > output/download-images-web.tar
-          ls -l output  # 检查 output 文件夹是否有 tar 文件
+          docker save -o output/download-images-web.tar download-images-web  # 保存为标准 tar 文件
+          ls -l output  # 确认 tar 文件是否成功创建
 
       # 上传构建产物（TAR 文件）以供下载
       - name: Upload Docker image TAR as artifact
-        uses: actions/upload-artifact@main  # 使用 main 分支的版本
+        uses: actions/upload-artifact@main
         with:
           name: download-images-web-tar
           path: output/download-images-web.tar
