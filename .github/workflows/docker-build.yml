@@ -1,0 +1,40 @@
+name: Build Docker Image and Save as TAR
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 获取代码
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 设置 Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      # 构建 Docker 镜像
+      - name: Build Docker image
+        run: |
+          docker build -t download-images-web .
+
+      # 导出 Docker 镜像为 TAR 文件
+      - name: Save Docker image as TAR
+        run: |
+          mkdir -p output
+          docker save download-images-web > output/download-images-web.tar
+
+      # 上传构建产物（TAR 文件）以供下载
+      - name: Upload Docker image TAR as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: download-images-web-tar
+          path: output/download-images-web.tar
