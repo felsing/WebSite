@@ -24,7 +24,7 @@ jobs:
       # 构建 Docker 镜像
       - name: Build Docker image
         run: |
-          docker build -t download-images-web .
+          docker build -t your-docker-username/download-images-web .
 
       # 导出 Docker 镜像为 TAR 文件
       - name: Save Docker image as TAR
@@ -34,7 +34,7 @@ jobs:
 
       # 上传构建产物（TAR 文件）以供下载
       - name: Upload Docker image TAR as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2  # 使用 v2 版本
         with:
           name: download-images-web-tar
           path: output/download-images-web.tar
