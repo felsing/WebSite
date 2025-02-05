@@ -9,7 +9,13 @@ COPY app.py /app/
 COPY templates /app/templates
 
 # 安装 Flask 和其他依赖
-RUN pip install Flask requests
+#RUN pip install Flask requests
+
+# 安装 Python 依赖
+RUN pip install --no-cache-dir -r requirements.txt
+
+# 暴露应用运行的端口（例如将端口改为 5100）
+EXPOSE 5100
 
 # 设置容器启动时运行 Flask Web 应用
 CMD ["python", "app.py"]
