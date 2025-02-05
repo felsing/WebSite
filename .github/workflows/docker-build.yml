@@ -32,6 +32,7 @@ jobs:
         run: |
           mkdir -p output
           docker save download-images-web > output/download-images-web.tar
+          ls -l output  # 检查 output 文件夹是否有 tar 文件
 
       # 上传构建产物（TAR 文件）以供下载
       - name: Upload Docker image TAR as artifact
