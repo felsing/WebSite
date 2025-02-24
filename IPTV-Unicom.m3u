@@ -73,9 +73,9 @@ rtp://239.3.1.151:8144
 #EXTINF:-1 tvg-name="CCTV4K" tvg-logo="https://live.fanmingming.cn/tv/CCTV4K.png" group-title="央视频道",CCTV-17 CCTV4K
 rtp://239.3.1.245:2000
 #EXTINF:-1 tvg-name="凤凰中文" tvg-logo="https://live.fanmingming.cn/tv/凤凰中文.png" group-title="凤凰",凤凰卫视 中文
-https://tv.iill.top/IPTV/fhzw
+http://dns.yiandrive.com:15907/phenix/fhzw
 #EXTINF:-1 tvg-name="凤凰卫视资讯台" tvg-logo="https://live.fanmingming.cn/tv/凤凰卫视资讯台.png" group-title="凤凰",凤凰卫视 资讯台
-https://tv.iill.top/IPTV/fhzx
+http://dns.yiandrive.com:15907/phenix/fhzx
 #EXTINF:-1 tvg-name="爱上4K" tvg-logo="https://live.fanmingming.cn/tv/爱上4K.png" group-title="北京IPTV",北京IPTV 爱上4K
 rtp://239.3.1.236:2000
 #EXTINF:-1 tvg-name="4K超清" tvg-logo="https://live.fanmingming.cn/tv/4K超清.png" group-title="北京IPTV",北京IPTV 4K超清
