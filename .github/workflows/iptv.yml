@@ -1,4 +1,4 @@
-name: Update IPTV List
+name: IPTV
 
 on:
   workflow_dispatch:
@@ -65,8 +65,8 @@ jobs:
 
     - name: Commit and Push Changes
       run: |
-        git config user.name "github-actions[bot]"
-        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git add iptv.m3u
         git commit -m "自动更新 IPTV 列表 $(date +'%Y-%m-%d %H:%M:%S')" || echo "无变化可提交"
         git push
