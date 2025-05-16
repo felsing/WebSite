@@ -16,7 +16,8 @@ https://hsplay-360.v.btime.com/live_btime/btv_sn_20170706_s5/index.m3u8?time=174
 #EXTINF:-1 tvg-name="北京纪实科教" tvg-logo="https://gh-proxy.com/https://raw.githubusercontent.com/fanmingming/live/main/tv/北京纪实科教.png",北京纪实科教
 https://hsplay-360.v.btime.com/live_btime/btv_sn_20170706_s3/index.m3u8?time=1747393212&sign=c1e925342c35c3740ed391d41d7b25e9
 #EXTINF:-1 tvg-name="北京卡酷少儿" tvg-logo="https://gh-proxy.com/https://raw.githubusercontent.com/fanmingming/live/main/tv/北京卡酷少儿.png",北京卡酷少儿
-https://hsplay-360.v.btime.com/live_btime/btv_sn_20170706_s10/index.m3u8?time=1747393214&sign=4578ab7e11bb89c1f9ff2633293f0f20#EXTINF:-1 tvg-name="天津卫视" tvg-logo="https://gitee.com/chilinha/tv/raw/master/logos/tianjin.png" group-title="天津频道",天津卫视
+https://hsplay-360.v.btime.com/live_btime/btv_sn_20170706_s10/index.m3u8?time=1747393214&sign=4578ab7e11bb89c1f9ff2633293f0f20
+#EXTINF:-1 tvg-name="天津卫视" tvg-logo="https://gitee.com/chilinha/tv/raw/master/logos/tianjin.png" group-title="天津频道",天津卫视
 http://233787ghfr13.vicp.fun:5893/rtp/225.1.1.111:5002
 #EXTINF:-1 tvg-name="天津新闻" tvg-logo="https://gitee.com/chilinha/tv/raw/master/logos/tianjin1.png" group-title="天津频道",天津新闻
 http://233787ghfr13.vicp.fun:5893/rtp/225.1.1.130:5002
