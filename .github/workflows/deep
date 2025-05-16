@@ -1,0 +1,65 @@
+name: Update IPTV List
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/30 * * * *'  # 每30分钟运行一次（UTC时间）
+
+jobs:
+  merge-and-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Merge M3U files
+      run: |
+        # 定义输出文件
+        OUTPUT_FILE="iptv.m3u"
+        
+        # 下载源文件
+        curl -sSL "https://raw.githubusercontent.com/0047ol/BRTV-Live-M3U8/main/BRTV.m3u" -o brtv.m3u
+        curl -sSL "https://raw.githubusercontent.com/govan10/TV-list/refs/heads/main/%E5%A4%A9%E6%B4%A5%E8%81%94%E9%80%9A%E5%85%AC%E7%BD%91.m3u" -o original.m3u
+
+        # 处理北京台格式并合并
+        sed -E '
+            s|#EXTINF:(-1)\s+tvg-name="([^"]+)",(.*)|#EXTINF:\1 tvg-id="\2" tvg-name="\2" tvg-logo="https://live.fanmingming.cn/tv/\2.png" group-title="北京",\3|
+        ' brtv.m3u | awk '
+            BEGIN { print "#EXTM3U" }
+            /^#EXTINF/ {
+                key = $0
+                sub(".*tvg-id=\"", "", key)
+                sub("\".*", "", key)
+                if (!seen[key]++) {
+                    print $0
+                    getline; print $0
+                }
+                next
+            }
+            { print }
+        ' > processed.m3u
+
+        # 合并原始文件（排除北京分组）
+        awk '
+            /^#EXTM3U/ { next }
+            /group-title="北京"/ { getline; next }
+            { print }
+        ' original.m3u >> processed.m3u
+
+        # 最终处理
+        sed -i '/^$/d' processed.m3u                  # 删除空行
+        mv processed.m3u "$OUTPUT_FILE"
+        rm brtv.m3u original.m3u                     # 清理临时文件
+
+    - name: Commit changes
+      run: |
+        if git diff --quiet; then
+          echo "没有内容变化"
+        else
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add iptv.m3u
+          git commit -m "自动更新播放列表 [$(date +'%Y-%m-%d %H:%M')]"
+          git push origin main
+        fi
