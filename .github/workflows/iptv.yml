@@ -24,45 +24,60 @@ jobs:
 
     - name: Process IPTV sources
       run: |
-        # 清理旧文件
-        rm -f *.m3u
+        # 清理旧文件（保留需要处理的源文件）
+        rm -f beijing.m3u original_clean.m3u combined.m3u
 
-        # 下载源文件
+        # 下载源文件（使用URL编码后的地址）
         wget -q https://raw.githubusercontent.com/0047ol/BRTV-Live-M3U8/main/BRTV.m3u
-        wget -q https://raw.githubusercontent.com/govan10/TV-list/refs/heads/main/%E5%A4%A9%E6%B4%A5%E8%81%94%E9%80%9A%E5%85%AC%E7%BD%91.m3u
+        wget -q "https://raw.githubusercontent.com/govan10/TV-list/main/%E5%A4%A9%E6%B4%A5%E8%81%94%E9%80%9A%E5%85%AC%E7%BD%91.m3u" -O original_source.m3u
 
-        # 处理北京台
+        # 处理北京台源（保持原有逻辑）
         sed -n '/北京/,+1p' BRTV.m3u | sed -E '
             s|#EXTINF:(-1) tvg-name="([^"]+)",(.*)|#EXTINF:\1 tvg-id="\2" tvg-name="\2" tvg-logo="https://live.fanmingming.cn/tv/\2.png" group-title="北京",\3|
         ' > beijing.m3u
 
-        # 处理原始文件（保留非北京分组）
-        sed '/group-title="北京"/,+1d' iptv.m3u > original_clean.m3u
+        # 处理原始源（删除原有北京分组）
+        sed '/group-title="北京"/,+1d' original_source.m3u > original_clean.m3u
 
-        # 合并文件（确保顺序）
+        # 合并文件
         echo "#EXTM3U" > combined.m3u
         cat beijing.m3u original_clean.m3u >> combined.m3u
 
-        # 去重处理（关键修复）
+        # 去重处理（增强版）
         awk '
-        BEGIN { RS=""; FS="\n"; OFS="\n" }
+        BEGIN { 
+            RS="\n\n"  # 按空行分割记录
+            FS="\n"    # 按行分割字段
+            print "#EXTM3U"
+        }
         /^#EXTINF/ {
-            key = $0
-            sub(".*tvg-id=\"", "", key)
-            sub("\".*", "", key)
-            if (!seen[key]++) {
-                print $0
-                getline; print $0
+            # 提取tvg-id作为唯一标识
+            match($1, /tvg-id="([^"]+)"/, arr)
+            id = arr[1]
+            
+            # 当id不存在时存储记录
+            if (id && !seen[id]++) {
+                print $1
+                print $2
             }
             next
         }
-        { print }
+        { 
+            # 处理其他有效内容
+            if ($0 && !/^#EXTM3U/) print 
+        }
         ' combined.m3u > iptv.m3u
 
         # 最终清理
         sed -i '/^$/d' iptv.m3u
-        rm -f BRTV.m3u iptv.m3u beijing.m3u original_clean.m3u combined.m3u  # 清理所有中间文件
+        rm -f BRTV.m3u original_source.m3u beijing.m3u original_clean.m3u combined.m3u
         echo "更新时间：${UPDATE_TIME}" > README.md
+
+        # 验证文件
+        echo "=== 最终文件信息 ==="
+        ls -l iptv.m3u
+        echo "=== 条目数量 ==="
+        grep -c "^#EXTINF" iptv.m3u
 
     - name: Commit changes
       run: |
@@ -70,7 +85,7 @@ jobs:
         git config --global user.email "actions@github.com"
         git add .
         if git diff-index --quiet HEAD --; then
-          echo "No changes"
+          echo "没有内容变化"
         else
           git commit -m "自动更新: ${UPDATE_TIME}"
           git push origin HEAD:main
