@@ -63,10 +63,10 @@ jobs:
         echo "=== 前5行内容 ==="
         head -n 5 "$OUTPUT_FILE"
 
-          - name: Commit and Push Changes
-            run: |
-              git config user.name "github-actions[bot]"
-              git config user.email "github-actions[bot]@users.noreply.github.com"
-              git add iptv.m3u
-              git commit -m "自动更新 IPTV 列表 $(date +'%Y-%m-%d %H:%M:%S')" || echo "无变化可提交"
-              git push
+    - name: Commit and Push Changes
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git add iptv.m3u
+        git commit -m "自动更新 IPTV 列表 $(date +'%Y-%m-%d %H:%M:%S')" || echo "无变化可提交"
+        git push
