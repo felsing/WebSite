@@ -67,6 +67,11 @@ jobs:
       run: |
         git config --local user.name "github-actions[bot]"
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
-        git add iptv.m3u
-        git commit -m "自动更新 IPTV 列表 $(date +'%Y-%m-%d %H:%M:%S')" || echo "无变化可提交"
-        git push
+        git checkout --orphan latest_branch
+        git add -A
+        git commit -am "${GET_TIME}"
+        git branch -D Files
+        git branch -m Files
+
+    - name: Push
+      run: git push -f origin Files
