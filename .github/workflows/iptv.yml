@@ -1,0 +1,69 @@
+name: Generate IPTV M3U
+
+on:
+  workflow_dispatch:  # 手动触发，也可以换成 schedule 定时触发
+  schedule:
+    - cron: '*/30 * * * *'  # 每天凌晨 2 点 UTC（北京时间 10 点）
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Generate M3U File
+        run: |
+          set -e
+
+          # 配置路径为仓库中的输出文件（根据需要更改）
+          OUTPUT_FILE="output/iptv.m3u"
+
+          # 创建输出目录
+          mkdir -p "$(dirname "$OUTPUT_FILE")"
+
+          # 初始化临时目录
+          TEMP_DIR=$(mktemp -d)
+          trap 'rm -rf "$TEMP_DIR"' EXIT
+
+          # 下载源文件
+          curl -sSL "https://raw.githubusercontent.com/0047ol/BRTV-Live-M3U8/main/BRTV.m3u" -o "$TEMP_DIR/brtv.m3u"
+          curl -sSL "https://raw.githubusercontent.com/govan10/TV-list/refs/heads/main/%E5%A4%A9%E6%B4%A5%E8%81%94%E9%80%9A%E5%85%AC%E7%BD%91.m3u" -o "$TEMP_DIR/original.m3u"
+
+          # 处理北京台格式
+          sed -E '
+              s|#EXTINF:(-1)\s+tvg-name="([^"]+)",(.*)|#EXTINF:\1 tvg-id="\2" tvg-name="\2" tvg-logo="https://live.fanmingming.cn/tv/\2.png" group-title="北京",\3|
+          ' "$TEMP_DIR/brtv.m3u" > "$TEMP_DIR/processed_brtv.m3u"
+
+          # 合并并去重
+          {
+              awk '
+              /^#EXTM3U/ { next }
+              /group-title="北京"/ { getline; next }
+              { print }
+              ' "$TEMP_DIR/original.m3u"
+              
+              cat "$TEMP_DIR/processed_brtv.m3u"
+          } | awk '
+          BEGIN { print "#EXTM3U" }
+          /^#EXTINF/ {
+              key = $0
+              sub(".*tvg-id=\"", "", key)
+              sub("\".*", "", key)
+              if (!seen[key]++) {
+                  print $0
+                  getline; print $0
+              }
+              next
+          }
+          { print }
+          ' > "$OUTPUT_FILE"
+
+      - name: Commit and Push Changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add output/iptv.m3u
+          git commit -m "自动更新 IPTV 列表 $(date +'%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
+          git push
