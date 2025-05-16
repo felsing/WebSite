@@ -25,37 +25,7 @@ jobs:
           # 删除旧文件
           rm -f "$OUTPUT_FILE"
 
-          # 路径验证函数
-          validate_path() {
-              local dir=$(dirname "$1")
-              if [ ! -d "$dir" ]; then
-                  echo "正在创建目录：$dir"
-                  mkdir -p "$dir" || {
-                      echo "错误：无法创建目录 $dir" >&2
-                      return 1
-                  }
-              fi
-              if [ ! -w "$dir" ]; then
-                  echo "错误：对目录 $dir 没有写入权限" >&2
-                  return 2
-              fi
-          }
-
-          # 主流程
-          echo "=== 开始执行 M3U 合并任务 ==="
-          echo "验证输出路径: $OUTPUT_FILE"
-          validate_path "$OUTPUT_FILE" || exit 1
-
-          temp_dir=$(mktemp -d)
-          trap 'rm -rf "$temp_dir"' EXIT
-          echo "创建临时目录: $temp_dir"
-
-          echo "正在下载源文件..."
-          curl -sSLf "$SOURCE_BRTV" -o "$temp_dir/brtv.m3u"
-          curl -sSLf "$SOURCE_IPTV" -o "$temp_dir/original.m3u"
-          echo "下载完成，文件大小:"
-          du -sh "$temp_dir"/*
-
+           # 处理北京台格式
           sed -E '
             s|#EXTINF:(-1)\s+tvg-name="([^"]+)",(.*)|#EXTINF:\1 tvg-id="\2" tvg-name="\2" tvg-logo="https://live.fanmingming.cn/tv/\2.png" group-title="北京",\3|
         ' brtv.m3u > processed_brtv.m3u
