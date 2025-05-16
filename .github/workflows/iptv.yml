@@ -1,31 +1,62 @@
-name: IPTV
+name: Generate IPTV M3U
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:  # 手动触发
   schedule:
-    - cron: '*/30 * * * *'  # 每30分钟运行一次（UTC时间）
+    - cron: '0 2 * * *'  # 每天凌晨 2 点（UTC）
 
 jobs:
-  merge-and-commit:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        persist-credentials: false  # 必须设置才能推送更改
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
-    - name: Merge M3U files
-      run: |
-        # 设置输出文件路径
-        OUTPUT_FILE="$GITHUB_WORKSPACE/iptv.m3u"
+      - name: Run IPTV M3U Generator
+        run: |
+          set -eo pipefail
 
-        # 下载源文件
-        curl -sSL "https://raw.githubusercontent.com/0047ol/BRTV-Live-M3U8/main/BRTV.m3u" -o brtv.m3u
-        curl -sSL "https://raw.githubusercontent.com/govan10/TV-list/refs/heads/main/%E5%A4%A9%E6%B4%A5%E8%81%94%E9%80%9A%E5%85%AC%E7%BD%91.m3u" -o original.m3u
+          # 配置路径为仓库中的输出文件（根据需要修改）
+          SOURCE_BRTV="https://raw.githubusercontent.com/0047ol/BRTV-Live-M3U8/main/BRTV.m3u"
+          SOURCE_IPTV="https://raw.githubusercontent.com/govan10/TV-list/refs/heads/main/%E5%A4%A9%E6%B4%A5%E8%81%94%E9%80%9A%E5%85%AC%E7%BD%91.m3u"
+          OUTPUT_FILE="output/iptv.m3u"
 
-        # 处理北京台格式
-        sed -E '
+          # 删除旧文件
+          rm -f "$OUTPUT_FILE"
+
+          # 路径验证函数
+          validate_path() {
+              local dir=$(dirname "$1")
+              if [ ! -d "$dir" ]; then
+                  echo "正在创建目录：$dir"
+                  mkdir -p "$dir" || {
+                      echo "错误：无法创建目录 $dir" >&2
+                      return 1
+                  }
+              fi
+              if [ ! -w "$dir" ]; then
+                  echo "错误：对目录 $dir 没有写入权限" >&2
+                  return 2
+              fi
+          }
+
+          # 主流程
+          echo "=== 开始执行 M3U 合并任务 ==="
+          echo "验证输出路径: $OUTPUT_FILE"
+          validate_path "$OUTPUT_FILE" || exit 1
+
+          temp_dir=$(mktemp -d)
+          trap 'rm -rf "$temp_dir"' EXIT
+          echo "创建临时目录: $temp_dir"
+
+          echo "正在下载源文件..."
+          curl -sSLf "$SOURCE_BRTV" -o "$temp_dir/brtv.m3u"
+          curl -sSLf "$SOURCE_IPTV" -o "$temp_dir/original.m3u"
+          echo "下载完成，文件大小:"
+          du -sh "$temp_dir"/*
+
+          sed -E '
             s|#EXTINF:(-1)\s+tvg-name="([^"]+)",(.*)|#EXTINF:\1 tvg-id="\2" tvg-name="\2" tvg-logo="https://live.fanmingming.cn/tv/\2.png" group-title="北京",\3|
         ' brtv.m3u > processed_brtv.m3u
 
@@ -63,15 +94,10 @@ jobs:
         echo "=== 前5行内容 ==="
         head -n 5 "$OUTPUT_FILE"
 
-    - name: Commit and Push Changes
-      run: |
-        git config --local user.name "github-actions[bot]"
-        git config --local user.email "github-actions[bot]@users.noreply.github.com"
-        git checkout --orphan latest_branch
-        git add -A
-        git commit -am "${GET_TIME}"
-        git branch -D Files
-        git branch -m Files
-
-    - name: Push
-      run: git push -f origin Files
+      - name: Commit and Push Changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add output/iptv.m3u
+          git commit -m "自动更新 IPTV 列表 $(date +'%Y-%m-%d %H:%M:%S')" || echo "无变化可提交"
+          git push
