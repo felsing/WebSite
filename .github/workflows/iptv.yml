@@ -1,0 +1,75 @@
+name: Auto Update IPTV
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0,30 * * * *'  # 每小时的0分和30分执行
+
+env:
+  TZ: Asia/Shanghai
+
+jobs:
+  merge-and-update:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        persist-credentials: false
+
+    - name: Setup environment
+      run: echo "UPDATE_TIME=$(date +'%Y-%m-%d %H:%M:%S CST')" >> $GITHUB_ENV
+
+    - name: Process IPTV sources
+      run: |
+        # 北京台源处理
+        wget -q https://raw.githubusercontent.com/0047ol/BRTV-Live-M3U8/main/BRTV.m3u -O brtv.m3u
+        sed -n '/北京/,+1p' brtv.m3u > beijing.m3u
+        sed -i '1i #EXTM3U' beijing.m3u
+        sed -i -E 's|#EXTINF:(-1) tvg-name="([^"]+)",(.*)|#EXTINF:\1 tvg-id="\2" tvg-name="\2" tvg-logo="https://live.fanmingming.cn/tv/\2.png" group-title="北京",\3|' beijing.m3u
+
+        # 原始源处理
+        wget -q https://raw.githubusercontent.com/govan10/TV-list/refs/heads/main/%E5%A4%A9%E6%B4%A5%E8%81%94%E9%80%9A%E5%85%AC%E7%BD%91.m3u -O original.m3u
+        sed -i '/group-title="北京"/,+1d' original.m3u  # 删除原有北京分组
+
+        # 合并文件
+        echo "#EXTM3U" > iptv.m3u
+        cat beijing.m3u >> iptv.m3u
+        cat original.m3u >> iptv.m3u
+        
+        # 去重处理
+        awk '
+        /^#EXTM3U/ { if (!header) { print; header=1 } next }
+        /^#EXTINF/ {
+            key = $0
+            getline
+            urls[key] = $0
+            next
+        }
+        { print }
+        END {
+            for (k in urls) {
+                print k
+                print urls[k]
+            }
+        }' iptv.m3u > tmp.m3u
+        
+        # 最终格式处理
+        sed -i '/^$/d' tmp.m3u
+        mv tmp.m3u iptv.m3u
+        echo "更新时间：${UPDATE_TIME}" > README.md
+
+    - name: Commit changes
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add iptv.m3u README.md
+        if git diff-index --quiet HEAD --; then
+          echo "没有内容变化"
+        else
+          git commit -m "自动更新: ${UPDATE_TIME}"
+          git push origin main
+        fi
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
