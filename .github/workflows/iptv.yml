@@ -25,13 +25,21 @@ jobs:
         wget -q "https://raw.githubusercontent.com/mytv-android/BRTV-Live-M3U8/main/BRTV.m3u"
         wget -q "https://raw.githubusercontent.com/govan10/TV-list/main/%E5%A4%A9%E6%B4%A5%E8%81%94%E9%80%9A%E5%85%AC%E7%BD%91.m3u" -O tianjin.m3u
 
-        # 合并文件（保留单个文件头）
+        # 确保文件末尾有换行符
+        sed -i -e '$a\' BRTV.m3u
+        sed -i -e '$a\' tianjin.m3u
+
+        # 合并文件（保留规范格式）
         echo "#EXTM3U" > iptv.m3u
-        tail -n +2 BRTV.m3u >> iptv.m3u  # 跳过第一个文件的头部
-        tail -n +2 tianjin.m3u >> iptv.m3u  # 跳过第二个文件的头部
+        awk 'NR>1' BRTV.m3u >> iptv.m3u  # 跳过第一个文件的头部
+        awk 'NR>1' tianjin.m3u >> iptv.m3u  # 跳过第二个文件的头部
 
         # 清理临时文件
         rm -f BRTV.m3u tianjin.m3u
+
+        # 验证格式
+        echo "=== 合并结果验证 ==="
+        grep -A1 "天津卫视" iptv.m3u
 
     - name: Commit changes
       run: |
