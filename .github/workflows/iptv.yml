@@ -1,0 +1,81 @@
+name: Update IPTV List
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/30 * * * *'  # 每30分钟运行一次（UTC时间）
+
+jobs:
+  merge-and-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        persist-credentials: false  # 必须设置才能推送更改
+
+    - name: Merge M3U files
+      run: |
+        # 设置输出文件路径
+        OUTPUT_FILE="$GITHUB_WORKSPACE/iptv.m3u"
+
+        # 下载源文件
+        curl -sSL "https://raw.githubusercontent.com/0047ol/BRTV-Live-M3U8/main/BRTV.m3u" -o brtv.m3u
+        curl -sSL "https://raw.githubusercontent.com/govan10/TV-list/refs/heads/main/%E5%A4%A9%E6%B4%A5%E8%81%94%E9%80%9A%E5%85%AC%E7%BD%91.m3u" -o original.m3u
+
+        # 处理北京台格式
+        sed -E '
+            s|#EXTINF:(-1)\s+tvg-name="([^"]+)",(.*)|#EXTINF:\1 tvg-id="\2" tvg-name="\2" tvg-logo="https://live.fanmingming.cn/tv/\2.png" group-title="北京",\3|
+        ' brtv.m3u > processed_brtv.m3u
+
+        # 合并文件（确保文件头唯一）
+        {
+            # 生成文件头
+            echo "#EXTM3U"
+            
+            # 合并北京台内容（去重）
+            awk '
+            /^#EXTINF/ {
+                key = $0
+                sub(".*tvg-id=\"", "", key)
+                sub("\".*", "", key)
+                if (!seen[key]++) {
+                    print $0
+                    getline; print $0
+                }
+                next
+            }
+            { print }
+            ' processed_brtv.m3u
+            
+            # 合并原始内容（排除北京分组）
+            awk '
+            /^#EXTM3U/ { next }
+            /group-title="北京"/ { getline; next }
+            { print }
+            ' original.m3u
+        } | sed '/^$/d' > "$OUTPUT_FILE"
+
+        # 验证文件生成
+        echo "=== 生成文件信息 ==="
+        ls -l "$OUTPUT_FILE"
+        echo "=== 前5行内容 ==="
+        head -n 5 "$OUTPUT_FILE"
+
+    - name: Commit changes
+      run: |
+        # 配置Git用户
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "actions@github.com"
+        
+        # 检测文件变更
+        if git diff --quiet --exit-code; then
+          echo "没有内容变更"
+        else
+          echo "检测到文件变更，正在提交..."
+          git add iptv.m3u
+          git commit -m "自动更新播放列表 [$(date +'%Y-%m-%d %H:%M')]"
+          git push origin main
+          echo "提交成功！"
+        fi
