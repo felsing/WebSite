@@ -1,0 +1,36 @@
+{
+  "spider": "./my_ext.js",
+  "sites": [
+    {
+      "key": "jable",
+      "name": "Jable.TV",
+      "type": 3,
+      "api": "js:require('./my_ext.js').jable",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1
+    },
+    {
+      "key": "missav",
+      "name": "MissAV",
+      "type": 3,
+      "api": "js:require('./my_ext.js').missav",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1
+    }
+  ],
+  "rules": [
+    {
+      "name": "proxy",
+      "hosts": [
+        "jable.tv",
+        "missav.ai"
+      ],
+      "regex": [
+        "https//[^/]*?"
+      ],
+      "replacement": "http://127.0.0.1:9978/proxy?url="
+    }
+  ]
+}
