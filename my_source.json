@@ -1,11 +1,11 @@
 {
-  "spider": "./my_ext.js",
+  "spider": "https://raw.githubusercontent.com/felsing/WebSite/refs/heads/main/my_ext.js",
   "sites": [
     {
       "key": "jable",
       "name": "Jable.TV",
       "type": 3,
-      "api": "js:require('./my_ext.js').jable",
+      "api": "js:require('./my_ext.js').jable", 
       "searchable": 1,
       "quickSearch": 1,
       "changeable": 1
