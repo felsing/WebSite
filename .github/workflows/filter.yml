@@ -1,12 +1,12 @@
-name: Filter Unicom IPTV
+name: Build IPTV Playlist
 
 on:
   schedule:
-    - cron: '0 */6 * * *'   # 每6小时跑一次
+    - cron: '0 */6 * * *'
   workflow_dispatch:
 
 jobs:
-  filter:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -26,10 +26,37 @@ jobs:
           keep { print }
           ' zubo_all.m3u > zubo_unicom.m3u
 
+      # 👉 就是放在这里 👇
+      - name: Re-group channels by name
+        run: |
+          awk '
+          /^#EXTINF/ {
+              line = $0
+              if (line ~ /CCTV-5/) {
+                  group = "体育频道"
+              } else if (line ~ /CCTV-/) {
+                  group = "央视频道"
+              } else if (line ~ /卫视/) {
+                  group = "卫视频道"
+              } else if (line ~ /体育|篮球|足球/) {
+                  group = "体育频道"
+              } else if (line ~ /少儿|卡通|动画/) {
+                  group = "少儿频道"
+              } else {
+                  group = "地方频道"
+              }
+              sub(/group-title="[^"]*"/, "group-title=\"" group "\"", line)
+              print line
+              getline
+              print
+              next
+          }
+          ' zubo_unicom.m3u > zubo_unicom_grouped.m3u
+
       - name: Commit result
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add zubo_unicom.m3u
-          git commit -m "Update Unicom-only IPTV list" || exit 0
+          git add zubo_unicom_grouped.m3u
+          git commit -m "Update Unicom IPTV playlist (grouped)" || exit 0
           git push
