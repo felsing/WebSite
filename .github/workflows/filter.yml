@@ -1,0 +1,35 @@
+name: Filter Unicom IPTV
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'   # 每6小时跑一次
+  workflow_dispatch:
+
+jobs:
+  filter:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Download zubo_all.m3u
+        run: |
+          curl -fsSL \
+          https://raw.githubusercontent.com/q1017673817/iptvz/refs/heads/main/zubo_all.m3u \
+          -o zubo_all.m3u
+
+      - name: Keep only Unicom
+        run: |
+          awk '
+          /^#EXTINF/ { keep = ($0 ~ /联通/); }
+          keep { print }
+          ' zubo_all.m3u > zubo_unicom.m3u
+
+      - name: Commit result
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add zubo_unicom.m3u
+          git commit -m "Update Unicom-only IPTV list" || exit 0
+          git push
