@@ -2,8 +2,8 @@ name: Build Unicom IPTV Playlist
 
 on:
   schedule:
-    - cron: '0 */6 * * *'   # 每6小时自动更新
-  workflow_dispatch:       # 手动触发
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
 
 jobs:
   build:
@@ -24,9 +24,9 @@ jobs:
           awk '
           /^#EXTINF/ { keep = ($0 ~ /联通/); }
           keep { print }
-          ' zubo_all.m3u > zubo_unicom.m3u
+          ' zubo_all.m3u > zubo_unicom.body
 
-      - name: Re-group channels (in-place)
+      - name: Re-group channels
         run: |
           awk '
           /^#EXTINF/ {
@@ -50,14 +50,19 @@ jobs:
               print line
               getline
               print
-              next
           }
-          ' zubo_unicom.m3u > zubo_unicom.tmp && mv zubo_unicom.tmp zubo_unicom.m3u
+          ' zubo_unicom.body > zubo_unicom.grouped
+
+      - name: Add EXTM3U header and finalize
+        run: |
+          echo '#EXTM3U x-tvg-url="https://live.fanmingming.cn/e.xml"' > zubo_unicom.m3u
+          cat zubo_unicom.grouped >> zubo_unicom.m3u
+          rm -f zubo_unicom.body zubo_unicom.grouped
 
       - name: Commit and push result
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git add zubo_unicom.m3u
-          git commit -m "Update Unicom IPTV playlist (grouped)" || exit 0
+          git commit -m "Update Unicom IPTV playlist (grouped + EPG)" || exit 0
           git push
