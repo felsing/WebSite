@@ -31,7 +31,7 @@ jobs:
           awk '
           /^#EXTINF/ {
               line = $0
-
+              # 1. 基础分类逻辑
               if (line ~ /CCTV-5/) {
                   group = "体育频道"
               } else if (line ~ /CCTV-/) {
@@ -43,15 +43,48 @@ jobs:
               } else if (line ~ /少儿|卡通|动画/) {
                   group = "少儿频道"
               } else {
-                  group = "地方频道"
+                  # 2. 地方频道细分逻辑：提取频道名中的省份信息
+                  # 匹配常见的省份或直辖市名称
+                  if (line ~ /北京/) group = "北京频道"
+                  else if (line ~ /天津/) group = "天津频道"
+                  else if (line ~ /河北/) group = "河北频道"
+                  else if (line ~ /山西/) group = "山西频道"
+                  else if (line ~ /内蒙古/) group = "内蒙古频道"
+                  else if (line ~ /辽宁/) group = "辽宁频道"
+                  else if (line ~ /吉林/) group = "吉林频道"
+                  else if (line ~ /黑龙江/) group = "黑龙江频道"
+                  else if (line ~ /上海/) group = "上海频道"
+                  else if (line ~ /江苏/) group = "江苏频道"
+                  else if (line ~ /浙江/) group = "浙江频道"
+                  else if (line ~ /安徽/) group = "安徽频道"
+                  else if (line ~ /福建/) group = "福建频道"
+                  else if (line ~ /江西/) group = "江西频道"
+                  else if (line ~ /山东/) group = "山东频道"
+                  else if (line ~ /河南/) group = "河南频道"
+                  else if (line ~ /湖北/) group = "湖北频道"
+                  else if (line ~ /湖南/) group = "湖南频道"
+                  else if (line ~ /广东|广州|深圳/) group = "广东频道"
+                  else if (line ~ /广西/) group = "广西频道"
+                  else if (line ~ /海南/) group = "海南频道"
+                  else if (line ~ /重庆/) group = "重庆频道"
+                  else if (line ~ /四川/) group = "四川频道"
+                  else if (line ~ /贵州/) group = "贵州频道"
+                  else if (line ~ /云南/) group = "云南频道"
+                  else if (line ~ /西藏/) group = "西藏频道"
+                  else if (line ~ /陕西/) group = "陕西频道"
+                  else if (line ~ /甘肃/) group = "甘肃频道"
+                  else if (line ~ /青海/) group = "青海频道"
+                  else if (line ~ /宁夏/) group = "宁夏频道"
+                  else if (line ~ /新疆/) group = "新疆频道"
+                  else group = "地方频道"
               }
-
+              
+              # 替换原有的 group-title
               sub(/group-title="[^"]*"/, "group-title=\"" group "\"", line)
               print line
               getline
               print
-          }
-          ' zubo_unicom.body > zubo_unicom.grouped
+          } ' zubo_unicom.body > zubo_unicom.grouped
 
       - name: Add EXTM3U header and finalize
         run: |
