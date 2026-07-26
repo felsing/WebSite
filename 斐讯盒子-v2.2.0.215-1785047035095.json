@@ -1,0 +1,453 @@
+{
+  "version": "2.2.0.215",
+  "syncAt": 1785047035095,
+  "syncFrom": "斐讯盒子",
+  "description": null,
+  "configs": {
+    "appBootLaunch": false,
+    "appPipEnable": false,
+    "appLastLatestVersion": "2.2.0.215",
+    "appAgreementAgreed": true,
+    "appStartupScreen": "Live",
+    "debugDeveloperMode": false,
+    "debugShowFps": false,
+    "debugShowVideoPlayerMetadata": false,
+    "debugShowLayoutGrids": false,
+    "iptvSourceCacheTime": 3600000,
+    "iptvSourceCurrentIdx": null,
+    "iptvSourceList": {
+      "value": [
+        {
+          "name": "APTV",
+          "url": "https://bit.ly/iptv-aptv",
+          "sourceType": 0,
+          "mac": null,
+          "userName": null,
+          "password": null,
+          "format": null,
+          "transformJs": null,
+          "httpUserAgent": "",
+          "httpProxy": null
+        },
+        {
+          "name": "裤佬",
+          "url": "https://live.445569.xyz/live.m3u",
+          "sourceType": 0,
+          "mac": null,
+          "userName": null,
+          "password": null,
+          "format": null,
+          "transformJs": null,
+          "httpUserAgent": "",
+          "httpProxy": null
+        },
+        {
+          "name": "suxuang",
+          "url": "https://bit.ly/suxuang-v4",
+          "sourceType": 0,
+          "mac": null,
+          "userName": null,
+          "password": null,
+          "format": null,
+          "transformJs": null,
+          "httpUserAgent": "",
+          "httpProxy": null
+        },
+        {
+          "name": "MIGU",
+          "url": "https://raw.githubusercontent.com/mytv-android/myMIGU/refs/heads/main/migu.m3u",
+          "sourceType": 0,
+          "mac": null,
+          "userName": null,
+          "password": null,
+          "format": null,
+          "transformJs": null,
+          "httpUserAgent": "",
+          "httpProxy": null
+        },
+        {
+          "name": "webview",
+          "url": "https://raw.githubusercontent.com/mytv-android/iptv-api/refs/heads/master/output/webview1.m3u",
+          "sourceType": 0,
+          "mac": null,
+          "userName": null,
+          "password": null,
+          "format": null,
+          "transformJs": null,
+          "httpUserAgent": "",
+          "httpProxy": null
+        },
+        {
+          "name": "JS",
+          "url": "https://raw.githubusercontent.com/mytv-android/mytvJS/refs/heads/main/js_github.m3u",
+          "sourceType": 0,
+          "mac": null,
+          "userName": null,
+          "password": null,
+          "format": null,
+          "transformJs": null,
+          "httpUserAgent": "",
+          "httpProxy": null
+        },
+        {
+          "name": "ysp",
+          "url": "https://raw.githubusercontent.com/mytv-android/mytvJS/refs/heads/main/ysp.github.m3u",
+          "sourceType": 0,
+          "mac": null,
+          "userName": null,
+          "password": null,
+          "format": null,
+          "transformJs": null,
+          "httpUserAgent": "",
+          "httpProxy": null
+        },
+        {
+          "name": "unicom",
+          "url": "https://raw.githubusercontent.com/felsing/WebSite/refs/heads/main/zubo_unicom.m3u",
+          "sourceType": 0,
+          "mac": null,
+          "userName": null,
+          "password": null,
+          "format": null,
+          "transformJs": null,
+          "httpUserAgent": "",
+          "httpProxy": null
+        },
+        {
+          "name": "北京联通",
+          "url": "https://raw.githubusercontent.com/zzzz0317/beijing-unicom-iptv-playlist/refs/heads/main/iptv-rtsp-raw.m3u",
+          "sourceType": 0,
+          "mac": null,
+          "userName": null,
+          "password": null,
+          "format": null,
+          "transformJs": null,
+          "httpUserAgent": "",
+          "httpProxy": null
+        },
+        {
+          "name": "芒果",
+          "url": "https://mgtv.ottiptv.cc/mglist.m3u?url=https://mgtv.ottiptv.cc",
+          "sourceType": 0,
+          "mac": null,
+          "userName": null,
+          "password": null,
+          "format": null,
+          "transformJs": null,
+          "httpUserAgent": "",
+          "httpProxy": null
+        }
+      ]
+    },
+    "iptvChannelGroupHiddenList": [],
+    "iptvChannelHiddenList": [],
+    "iptvChannelGroupEncrypted": false,
+    "iptvHybridMode": "DISABLE",
+    "iptvHybridYangshipinCookie": "",
+    "iptvSimilarChannelMerge": true,
+    "iptvChannelLogoProvider": "https://gitee.com/mytv-android/myTVlogo/raw/main/img/{name|uppercase}.png",
+    "iptvChannelLogoOverride": true,
+    "iptvPLTVToTVOD": true,
+    "iptvChannelFavoriteEnable": true,
+    "iptvChannelHistoryEnable": true,
+    "iptvChannelFavoriteListVisible": false,
+    "iptvChannelFavoriteList": {
+      "value": [
+        {
+          "channel": {
+            "name": "第一财经",
+            "standardName": "第一财经",
+            "epgName": "第一财经",
+            "epgID": "",
+            "lineList": {
+              "value": [
+                {
+                  "url": "https://fastly.jsdelivr.net/gh/mytv-android/mytvJS@main/js/sh.js?id=dycj",
+                  "httpUserAgent": null,
+                  "httpReferrer": null,
+                  "httpOrigin": null,
+                  "httpCookie": null,
+                  "hybridType": "JavaScript",
+                  "name": null,
+                  "manifestType": null,
+                  "licenseType": null,
+                  "licenseKey": null,
+                  "playbackType": 1,
+                  "playbackFormat": "?playseek=${(b)yyyyMMddHHmmss}-${(e)yyyyMMddHHmmss}",
+                  "hosts": {},
+                  "proceedUrl": null
+                },
+                {
+                  "url": "https://live.kankanews.com/huikan?id=5",
+                  "httpUserAgent": null,
+                  "httpReferrer": null,
+                  "httpOrigin": null,
+                  "httpCookie": null,
+                  "hybridType": "WebView",
+                  "name": null,
+                  "manifestType": null,
+                  "licenseType": null,
+                  "licenseKey": null,
+                  "playbackType": 1,
+                  "playbackFormat": "?playseek=${(b)yyyyMMddHHmmss}-${(e)yyyyMMddHHmmss}",
+                  "hosts": {},
+                  "proceedUrl": null
+                }
+              ]
+            },
+            "logo": "https://logo.ugreen.cloudns.biz/img/dycj.png",
+            "index": 19,
+            "channelNumber": null,
+            "hash": -401481138
+          },
+          "iptvSourceName": "webview",
+          "groupName": "🏍️上海频道"
+        },
+        {
+          "channel": {
+            "name": "上海第一财经",
+            "standardName": "第一财经",
+            "epgName": "",
+            "epgID": "上海第一财经",
+            "lineList": {
+              "value": [
+                {
+                  "url": "https://raw.githubusercontent.com/mytv-android/mytvJS/refs/heads/main/js/mgd_github.js?channel=上海第一财经",
+                  "httpUserAgent": "MGPlayer4Android/v9.49.0.3.28",
+                  "httpReferrer": null,
+                  "httpOrigin": null,
+                  "httpCookie": null,
+                  "hybridType": "JavaScript",
+                  "name": null,
+                  "manifestType": null,
+                  "licenseType": null,
+                  "licenseKey": null,
+                  "playbackType": 1,
+                  "playbackFormat": "&playbackbegin=${(b)YMMddHHmmss}&playbackend=${(e)YMMddHHmmss}",
+                  "hosts": {},
+                  "proceedUrl": null
+                }
+              ]
+            },
+            "logo": "http://wapx.cmvideo.cn:8080/publish/poms/image/2201/008/312/202209271630_2201008312_H32_1080.webp",
+            "index": 4,
+            "channelNumber": null,
+            "hash": 1261253656
+          },
+          "iptvSourceName": "MIGU",
+          "groupName": "地方"
+        },
+        {
+          "channel": {
+            "name": "凤凰中文",
+            "standardName": "凤凰中文",
+            "epgName": "",
+            "epgID": "",
+            "lineList": {
+              "value": [
+                {
+                  "url": "https://cdn.qd.je/163189/fhzw",
+                  "httpUserAgent": null,
+                  "httpReferrer": null,
+                  "httpOrigin": null,
+                  "httpCookie": null,
+                  "hybridType": "None",
+                  "name": null,
+                  "manifestType": null,
+                  "licenseType": null,
+                  "licenseKey": null,
+                  "playbackType": null,
+                  "playbackFormat": null,
+                  "hosts": {},
+                  "proceedUrl": null
+                }
+              ]
+            },
+            "logo": "https://epg.112114.xyz/logo/%E5%87%A4%E5%87%B0%E4%B8%AD%E6%96%87.png",
+            "index": 23,
+            "channelNumber": null,
+            "hash": -197309522
+          },
+          "iptvSourceName": "裤佬",
+          "groupName": "🔮港澳台直播"
+        },
+        {
+          "channel": {
+            "name": "凤凰资讯",
+            "standardName": "凤凰资讯",
+            "epgName": "",
+            "epgID": "",
+            "lineList": {
+              "value": [
+                {
+                  "url": "https://cdn.qd.je/163189/fhzx",
+                  "httpUserAgent": null,
+                  "httpReferrer": null,
+                  "httpOrigin": null,
+                  "httpCookie": null,
+                  "hybridType": "None",
+                  "name": null,
+                  "manifestType": null,
+                  "licenseType": null,
+                  "licenseKey": null,
+                  "playbackType": null,
+                  "playbackFormat": null,
+                  "hosts": {},
+                  "proceedUrl": null
+                }
+              ]
+            },
+            "logo": "https://epg.112114.xyz/logo/%E5%87%A4%E5%87%B0%E8%B5%84%E8%AE%AF.png",
+            "index": 23,
+            "channelNumber": null,
+            "hash": -474888610
+          },
+          "iptvSourceName": "裤佬",
+          "groupName": "🔮港澳台直播"
+        }
+      ]
+    },
+    "iptvChannelHistoryList": null,
+    "iptvChannelLastPlay": null,
+    "iptvChannelLastPlayLineIdx": null,
+    "iptvChannelLinePlayableHostList": null,
+    "iptvChannelLinePlayableUrlList": null,
+    "iptvChannelNoSelectEnable": true,
+    "iptvChannelChangeListLoop": true,
+    "iptvChannelChangeCrossGroup": true,
+    "iptvChannelChangeShowInfoPanel": true,
+    "epgEnable": true,
+    "epgSourceCurrent": {
+      "name": "myEPG",
+      "url": "https://github.com/mytv-android/myEPG/raw/refs/heads/master/output/epg.gz"
+    },
+    "epgSourceList": {
+      "value": [
+        {
+          "name": "myEPG",
+          "url": "https://github.com/mytv-android/myEPG/raw/refs/heads/master/output/epg.gz"
+        }
+      ]
+    },
+    "epgRefreshTimeThreshold": 2,
+    "epgSourceFollowIptv": true,
+    "epgSourceLoadAll": false,
+    "alwaysShowEPGInClassicChannelScreen": false,
+    "epgChannelReserveList": {
+      "value": []
+    },
+    "uiShowEpgProgrammeProgress": true,
+    "uiShowEpgProgrammePermanentProgress": false,
+    "uiShowReplayBadge": true,
+    "uiShowChannelLogo": true,
+    "uiShowChannelPreview": true,
+    "channelPreviewParallelCount": 1,
+    "uiLazyRender": false,
+    "uiLazyRenderParallelCount": 1,
+    "uiLazyRenderInterval": -1,
+    "uiListAnimation": true,
+    "uiUseClassicPanelScreen": true,
+    "uiClassicShowSourceList": false,
+    "uiClassicShowChannelInfo": false,
+    "uiClassicShowChannelNo": false,
+    "uiClassicShowAllChannels": false,
+    "uiDensityScaleRatio": 0,
+    "uiFontScaleRatio": 1,
+    "uiVideoPlayerSubtitle": {
+      "useSystemDefault": false,
+      "isApplyEmbeddedStyles": true,
+      "textSize": 70,
+      "bottomPaddingFraction": 0.08,
+      "style": {
+        "foregroundColor": -1,
+        "backgroundColor": 0,
+        "windowColor": 0,
+        "edgeType": 1,
+        "edgeColor": 0
+      }
+    },
+    "uiTimeShowMode": "EVERY_HOUR",
+    "uiFocusOptimize": null,
+    "uiScreenAutoCloseDelay": 15000,
+    "uiMultiViewSchemeList": {
+      "value": []
+    },
+    "keyDownEventUp": "ChangeCurrentChannelToPrev",
+    "keyDownEventDown": "ChangeCurrentChannelToNext",
+    "keyDownEventLeft": "ChangeCurrentChannelLineIdxToPrev",
+    "keyDownEventRight": "ChangeCurrentChannelLineIdxToNext",
+    "keyDownEventSelect": "ToChannelScreen",
+    "keyDownEventLongUp": "ToIptvSourceScreen",
+    "keyDownEventLongDown": "ToVideoPlayerControllerScreen",
+    "keyDownEventLongLeft": "ToEpgScreen",
+    "keyDownEventLongRight": "ToChannelLineScreen",
+    "keyDownEventLongSelect": "ToQuickOpScreen",
+    "updateForceRemind": false,
+    "updateChannel": "beta",
+    "globalVideoPlayerCore": null,
+    "globalVideoPlayerForceSoftDecode": null,
+    "webViewCore": null,
+    "replaceSystemWebView": null,
+    "videoPlayerRenderMode": "SURFACE_VIEW",
+    "videoPlayerRtspTransport": "TCP",
+    "videoPlayerUserAgent": "Mytv.Android",
+    "videoPlayerHeaders": "",
+    "videoPlayerLoadTimeout": 10000,
+    "webViewLoadTimeout": 30000,
+    "videoPlayerBufferTime": 0,
+    "videoPlayerRealTimeASR": false,
+    "videoPlayerASRModel": "",
+    "videoPlayerASRTranslationEngine": "",
+    "videoPlayerASRTranslationTargetLang": "en",
+    "videoPlayerASRTranslationTencentSecretId": "",
+    "videoPlayerASRTranslationTencentSecretKey": "",
+    "videoPlayerASRTranslationBaiduAppId": "",
+    "videoPlayerASRTranslationBaiduSecretKey": "",
+    "videoPlayerASRTranslationMTranServerUrl": "",
+    "videoPlayerASRTranslationMTranServerToken": "",
+    "videoPlayerASRMode": "RENDERER_ONLY",
+    "videoPlayerASRLeadTimeMs": 500,
+    "videoPlayerASRAutoStreamingFallback": true,
+    "videoPlayerASRSilenceThresholdMs": 650,
+    "videoPlayerASRVadType": "silero",
+    "videoPlayerDisplayMode": "SIXTEEN_NINE",
+    "videoPlayerForceSoftDecode": null,
+    "videoPlayerStopPreviousMediaItem": false,
+    "videoPlayerSeekToMode": "RELOAD_URL",
+    "videoPlayerSkipMultipleFramesOnSameVSync": true,
+    "videoPlayerFitFrameRate": false,
+    "videoPlayerFrameRateFallback": "SYSTEM_DEFAULT",
+    "videoPlayerApplyBetterDetection": true,
+    "videoPlayerExtractHeaderFromLink": false,
+    "videoPlayerDecoderConfig": 0,
+    "videoPlayerDecoderConfigRegexList": {
+      "list": []
+    },
+    "videoPlayerVolumeNormalization": false,
+    "videoPlayerVolumeBalanceLevel": "Off",
+    "videoPlayerDns": "",
+    "videoPlayerProxy": "",
+    "videoPlayerProxyRuleList": {
+      "list": []
+    },
+    "themeAppCurrent": null,
+    "themeMode": 2,
+    "themeColorProvider": 0,
+    "cloudSyncAutoPull": null,
+    "cloudSyncProvider": null,
+    "cloudSyncGithubGistId": "",
+    "cloudSyncGithubGistToken": "",
+    "cloudSyncGiteeGistId": "",
+    "cloudSyncGiteeGistToken": "",
+    "cloudSyncNetworkUrl": "",
+    "cloudSyncLocalFilePath": "file:///storage/emulated/0/Download/",
+    "cloudSyncWebDavUrl": "",
+    "cloudSyncWebDavUsername": "",
+    "cloudSyncWebDavPassword": "",
+    "networkRetryCount": 10,
+    "networkRetryInterval": 1000,
+    "classicPanelLastSelectedGroupName": "北京"
+  },
+  "extraLocalIptvSourceList": {},
+  "extraChannelNameAlias": ""
+}
