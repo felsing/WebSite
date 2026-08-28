@@ -88,7 +88,7 @@ jobs:
 
       - name: Add EXTM3U header and finalize
         run: |
-          echo '#EXTM3U x-tvg-url="https://epg.yang-1989.eu.org/epg.xml.gz"' > zubo_unicom.m3u
+          echo '#EXTM3U x-tvg-url="https://github.com/felsing/WebSite/blob/main/epg.xml.gz"' > zubo_unicom.m3u
           cat zubo_unicom.grouped >> zubo_unicom.m3u
           rm -f zubo_unicom.body zubo_unicom.grouped
 
