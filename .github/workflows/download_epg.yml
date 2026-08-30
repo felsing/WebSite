@@ -2,7 +2,7 @@ name: Download EPG File
 
 on:
   schedule:
-    - cron: '0 */6 * * *'  # 每 6 小时执行一次
+#    - cron: '0 */6 * * *'  # 每 6 小时执行一次
   workflow_dispatch:        # 支持手动触发
 
 jobs:
