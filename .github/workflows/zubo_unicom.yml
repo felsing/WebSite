@@ -10,8 +10,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
+      # ==================================================
+      # 1. Checkout
+      # ==================================================
+
       - name: Checkout repo
         uses: actions/checkout@v4
+
+
+      # ==================================================
+      # 2. 下载原始 M3U
+      # ==================================================
 
       - name: Download zubo_all.m3u
         run: |
@@ -19,83 +29,210 @@ jobs:
           https://raw.githubusercontent.com/q1017673817/iptvz/refs/heads/main/zubo_all.m3u \
           -o zubo_all.m3u
 
+
+      # ==================================================
+      # 3. 只保留联通频道
+      # ==================================================
+
       - name: Keep only Unicom channels
         run: |
           awk '
           /^#EXTINF/ { keep = ($0 ~ /联通/); }
           keep { print }
           ' zubo_all.m3u > zubo_unicom.body
-          
+
+
+      # ==================================================
+      # 4. 检测 IPTV 服务器
+      #
+      #    每个 IP:PORT：
+      #
+      #    第一次：
+      #      优先 CCTV-1 / CCTV-5
+      #      没有则随机频道
+      #
+      #    第一次失败：
+      #      再随机测试第二个频道
+      #
+      #    两次都失败：
+      #      删除该 IP:PORT 下的全部频道
+      #
+      # ==================================================
+
+      - name: Filter invalid IPTV servers
+        run: |
+          python3 scripts/check_iptv.py
+
+
+      # ==================================================
+      # 5. 重新分组频道
+      # ==================================================
+
       - name: Re-group channels
         run: |
           awk '
           /^#EXTINF/ {
               line = $0
+
               # 1. 基础分类逻辑
+
               if (line ~ /CCTV-5/) {
                   group = "体育频道"
+
               } else if (line ~ /CCTV-/) {
                   group = "央视频道"
+
               } else if (line ~ /卫视/) {
                   group = "卫视频道"
+
               } else if (line ~ /体育|篮球|足球/) {
                   group = "体育频道"
+
               } else if (line ~ /少儿|卡通|动画/) {
                   group = "少儿频道"
+
               } else {
-                  # 2. 地方频道细分逻辑：提取频道名中的省份信息
-                  # 匹配常见的省份或直辖市名称
-                  if (line ~ /北京/) group = "北京频道"
-                  else if (line ~ /天津/) group = "天津频道"
-                  else if (line ~ /河北/) group = "河北频道"
-                  else if (line ~ /山西/) group = "山西频道"
-                  else if (line ~ /内蒙古/) group = "内蒙古频道"
-                  else if (line ~ /辽宁/) group = "辽宁频道"
-                  else if (line ~ /吉林/) group = "吉林频道"
-                  else if (line ~ /黑龙江/) group = "黑龙江频道"
-                  else if (line ~ /上海/) group = "上海频道"
-                  else if (line ~ /江苏/) group = "江苏频道"
-                  else if (line ~ /浙江/) group = "浙江频道"
-                  else if (line ~ /安徽/) group = "安徽频道"
-                  else if (line ~ /福建/) group = "福建频道"
-                  else if (line ~ /江西/) group = "江西频道"
-                  else if (line ~ /山东/) group = "山东频道"
-                  else if (line ~ /河南/) group = "河南频道"
-                  else if (line ~ /湖北/) group = "湖北频道"
-                  else if (line ~ /湖南/) group = "湖南频道"
-                  else if (line ~ /广东|广州|深圳/) group = "广东频道"
-                  else if (line ~ /广西/) group = "广西频道"
-                  else if (line ~ /海南/) group = "海南频道"
-                  else if (line ~ /重庆/) group = "重庆频道"
-                  else if (line ~ /四川/) group = "四川频道"
-                  else if (line ~ /贵州/) group = "贵州频道"
-                  else if (line ~ /云南/) group = "云南频道"
-                  else if (line ~ /西藏/) group = "西藏频道"
-                  else if (line ~ /陕西/) group = "陕西频道"
-                  else if (line ~ /甘肃/) group = "甘肃频道"
-                  else if (line ~ /青海/) group = "青海频道"
-                  else if (line ~ /宁夏/) group = "宁夏频道"
-                  else if (line ~ /新疆/) group = "新疆频道"
-                  else group = "地方频道"
+
+                  # 2. 地方频道细分逻辑
+
+                  if (line ~ /北京/)
+                      group = "北京频道"
+
+                  else if (line ~ /天津/)
+                      group = "天津频道"
+
+                  else if (line ~ /河北/)
+                      group = "河北频道"
+
+                  else if (line ~ /山西/)
+                      group = "山西频道"
+
+                  else if (line ~ /内蒙古/)
+                      group = "内蒙古频道"
+
+                  else if (line ~ /辽宁/)
+                      group = "辽宁频道"
+
+                  else if (line ~ /吉林/)
+                      group = "吉林频道"
+
+                  else if (line ~ /黑龙江/)
+                      group = "黑龙江频道"
+
+                  else if (line ~ /上海/)
+                      group = "上海频道"
+
+                  else if (line ~ /江苏/)
+                      group = "江苏频道"
+
+                  else if (line ~ /浙江/)
+                      group = "浙江频道"
+
+                  else if (line ~ /安徽/)
+                      group = "安徽频道"
+
+                  else if (line ~ /福建/)
+                      group = "福建频道"
+
+                  else if (line ~ /江西/)
+                      group = "江西频道"
+
+                  else if (line ~ /山东/)
+                      group = "山东频道"
+
+                  else if (line ~ /河南/)
+                      group = "河南频道"
+
+                  else if (line ~ /湖北/)
+                      group = "湖北频道"
+
+                  else if (line ~ /湖南/)
+                      group = "湖南频道"
+
+                  else if (line ~ /广东|广州|深圳/)
+                      group = "广东频道"
+
+                  else if (line ~ /广西/)
+                      group = "广西频道"
+
+                  else if (line ~ /海南/)
+                      group = "海南频道"
+
+                  else if (line ~ /重庆/)
+                      group = "重庆频道"
+
+                  else if (line ~ /四川/)
+                      group = "四川频道"
+
+                  else if (line ~ /贵州/)
+                      group = "贵州频道"
+
+                  else if (line ~ /云南/)
+                      group = "云南频道"
+
+                  else if (line ~ /西藏/)
+                      group = "西藏频道"
+
+                  else if (line ~ /陕西/)
+                      group = "陕西频道"
+
+                  else if (line ~ /甘肃/)
+                      group = "甘肃频道"
+
+                  else if (line ~ /青海/)
+                      group = "青海频道"
+
+                  else if (line ~ /宁夏/)
+                      group = "宁夏频道"
+
+                  else if (line ~ /新疆/)
+                      group = "新疆频道"
+
+                  else
+                      group = "地方频道"
               }
-              
-              # 替换原有的 group-title
-              sub(/group-title="[^"]*"/, "group-title=\"" group "\"", line)
+
+              # 替换原有 group-title
+
+              sub(
+                  /group-title="[^"]*"/,
+                  "group-title=\"" group "\"",
+                  line
+              )
+
               print line
+
               getline
               print
-          } ' zubo_unicom.body > zubo_unicom.grouped
+          }
+          ' zubo_unicom.body > zubo_unicom.grouped
+
+
+      # ==================================================
+      # 6. 添加 EXTM3U + EPG
+      # ==================================================
 
       - name: Add EXTM3U header and finalize
         run: |
           echo '#EXTM3U x-tvg-url="https://github.com/mytv-android/myEPG/raw/refs/heads/master/output/epg.gz"' > zubo_unicom.m3u
+
           cat zubo_unicom.grouped >> zubo_unicom.m3u
-          rm -f zubo_unicom.body zubo_unicom.grouped
+
+          rm -f zubo_unicom.body
+          rm -f zubo_unicom.grouped
+
+
+      # ==================================================
+      # 7. 提交 GitHub
+      # ==================================================
 
       - name: Commit and push result
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
+
           git add zubo_unicom.m3u
+
           git commit -m "Update Unicom IPTV playlist (grouped + EPG)" || exit 0
+
           git push
