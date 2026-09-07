@@ -194,12 +194,8 @@ jobs:
 
               # 替换原有 group-title
 
-              sub(
-                  /group-title="[^"]*"/,
-                  "group-title=\"" group "\"",
-                  line
-              )
-
+              sub(/group-title="[^"]*"/, "group-title=\"" group "\"", line)
+                  
               print line
 
               getline
